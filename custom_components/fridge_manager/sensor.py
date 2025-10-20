@@ -1,10 +1,11 @@
 """Sensor pour le gestionnaire de frigo."""
 import logging
-from datetime import datetime
+from datetime import datetime, time, timedelta
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+from homeassistant.helpers.event import async_track_time_change
 
 from . import DOMAIN
 
@@ -24,7 +25,7 @@ async def async_setup_platform(
 
 class FridgeManagerSensor(SensorEntity):
     """Sensor principal du gestionnaire de frigo."""
-    
+
     def __init__(self, hass):
         """Initialiser le sensor."""
         self.hass = hass
@@ -32,6 +33,7 @@ class FridgeManagerSensor(SensorEntity):
         self._attr_unique_id = "fridge_manager_main"
         self._attr_icon = "mdi:fridge"
         self._attr_has_entity_name = True
+        self._daily_update_listener = None
         _LOGGER.info("Sensor initialisé")
         
     @property
@@ -107,5 +109,43 @@ class FridgeManagerSensor(SensorEntity):
     
     @property
     def should_poll(self):
-        """Le sensor ne doit pas faire de polling."""
-        return False
+        """Activer le polling pour les mises à jour automatiques."""
+        return True  # Permettre les mises à jour automatiques
+
+    @property
+    def scan_interval(self):
+        """Définir l'intervalle de scan à 24 heures."""
+        return timedelta(hours=24)  # Mise à jour quotidienne
+
+    async def async_update(self):
+        """Mise à jour automatique du sensor."""
+        _LOGGER.info("Mise à jour automatique du sensor Fridge Manager")
+
+        # Forcer la mise à jour en réinitialisant l'état
+        if DOMAIN in self.hass.data:
+            items = self.hass.data[DOMAIN].get("items", [])
+            today = datetime.now().date()
+
+            # Recalculer les états des articles
+            updated_items = []
+            for item in items:
+                try:
+                    exp_date = datetime.fromisoformat(item["expiration_date"]).date()
+                    days_left = (exp_date - today).days
+
+                    updated_item = item.copy()
+                    updated_item["days_left"] = days_left
+                    updated_items.append(updated_item)
+
+                    if days_left < 0 or days_left <= 2:
+                        _LOGGER.info(f"Article '{item['name']}' expire dans {days_left} jours")
+                except Exception as e:
+                    _LOGGER.error(f"Erreur lors du traitement de l'article {item}: {e}")
+                    updated_items.append(item)
+
+            # Mettre à jour les données
+            self.hass.data[DOMAIN]["items"] = updated_items
+
+            _LOGGER.info(f"Mise à jour automatique terminée - {len(updated_items)} articles traités")
+        else:
+            _LOGGER.warning("DOMAIN non trouvé dans hass.data lors de la mise à jour automatique")

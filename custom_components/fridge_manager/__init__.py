@@ -2,12 +2,13 @@
 import logging
 import json
 import os
-from datetime import datetime, date
+from datetime import datetime, date, time
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.discovery import async_load_platform
+from homeassistant.helpers.event import async_track_time_change
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -109,6 +110,48 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         hass.data[DOMAIN]["items"] = []
         await save_data()
         hass.bus.async_fire("fridge_manager_updated")
+
+    async def daily_update_callback(now):
+        """Callback pour la mise à jour quotidienne à minuit."""
+        _LOGGER.info("Début de la mise à jour quotidienne automatique à minuit")
+
+        # Mettre à jour les calculs de jours restants
+        items = hass.data[DOMAIN]["items"]
+        today = date.today()
+
+        updated_items = []
+        expired_count = 0
+        expiring_soon_count = 0
+
+        for item in items:
+            try:
+                exp_date = datetime.fromisoformat(item["expiration_date"]).date()
+                days_left = (exp_date - today).days
+
+                updated_item = item.copy()
+                updated_item["days_left"] = days_left
+                updated_items.append(updated_item)
+
+                if days_left < 0:
+                    expired_count += 1
+                    _LOGGER.info(f"Article expiré détecté: {item['name']} ({days_left} jours)")
+                elif days_left <= 2:
+                    expiring_soon_count += 1
+                    _LOGGER.info(f"Article bientôt expiré: {item['name']} ({days_left} jours)")
+
+            except Exception as e:
+                _LOGGER.error(f"Erreur lors du traitement de l'article {item}: {e}")
+                updated_items.append(item)
+
+        # Mettre à jour les données
+        hass.data[DOMAIN]["items"] = updated_items
+        await save_data()
+
+        # Déclencher l'événement pour mettre à jour le sensor
+        hass.bus.async_fire("fridge_manager_updated")
+
+        _LOGGER.info(f"Mise à jour quotidienne terminée - {len(updated_items)} articles traités, "
+                    f"{expired_count} expirés, {expiring_soon_count} bientôt expirés")
     
     # Enregistrer les services
     hass.services.async_register(
@@ -122,10 +165,20 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     )
     
     _LOGGER.info("Services enregistrés")
-    
+
+    # Configurer la mise à jour quotidienne à minuit
+    async_track_time_change(
+        hass,
+        daily_update_callback,
+        hour=0,
+        minute=0,
+        second=0
+    )
+    _LOGGER.info("Planificateur quotidien configuré pour minuit")
+
     # Charger la plateforme sensor
     hass.async_create_task(
         async_load_platform(hass, "sensor", DOMAIN, {}, config)
     )
-    
+
     return True
