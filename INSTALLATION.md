@@ -62,11 +62,11 @@ title: "Mon Frigo"  # Personnaliser le titre
 
 ## ✅ Vérification finale
 
-### 5.1 Tester l'ajout d'articles
+### Tester l'ajout d'articles
 1. Utilisez la carte pour ajouter un article
 2. Vérifiez qu'il apparaît dans le sensor
 
-### 5.2 Vérifier les logs
+### Vérifier les logs
 Dans **Paramètres** > **Journaux**, vous devriez voir :
 ```
 INFO Configuration du sensor Fridge Manager
@@ -91,13 +91,14 @@ HACS gérera automatiquement les mises à jour :
 
 ### Problème : La carte ne s'affiche pas
 **Solution :**
-1. Vérifiez l'installation de la partie Frontend dans HACS
+1. Vérifiez que HACS a bien installé tous les fichiers
 2. Videz le cache du navigateur
-3. Vérifiez la console du navigateur pour des erreurs
+3. Vérifiez que le fichier est accessible via `/hacsfiles/fridge_manager/fridge-manager-card.js`
+4. Redémarrez Home Assistant
 
 ### Problème : Erreur de structure
 **Solution :**
-1. Assurez-vous que vous avez bien installé les deux parties (Intégration + Frontend)
+1. Vérifiez que le dossier `custom_components/fridge_manager/www/` existe
 2. Vérifiez la version de Home Assistant (min. 2024.1.0)
 3. Réinstallez via HACS
 
