@@ -10,9 +10,9 @@ Ce guide explique comment installer l'extension **Fridge Manager** via HACS (Hom
 - HACS installé et configuré
 - Accès internet
 
-## 🔧 Étape 1 : Installation de l'intégration
+## 🚀 Installation en 1 seule étape !
 
-### 1.1 Ajouter le dépôt personnalisé
+### Ajouter le dépôt HACS
 1. Allez dans **HACS** > **Integrations**
 2. Cliquez sur les **3 points** (⋮) en haut à droite
 3. Sélectionnez **Télécharger** (Download)
@@ -22,45 +22,27 @@ Ce guide explique comment installer l'extension **Fridge Manager** via HACS (Hom
    ```
 5. Cliquez sur **Télécharger**
 
-### 1.2 Installation automatique
-HACS va :
-- ✅ Télécharger les fichiers
-- ✅ Valider la structure
-- ✅ Installer dans `custom_components/fridge_manager/`
+### Installation automatique complète
+HACS va automatiquement installer :
+- ✅ **L'intégration** dans `custom_components/fridge_manager/`
+- ✅ **La carte personnalisée** accessible via `/hacsfiles/fridge_manager/`
+- ✅ **Toutes les dépendances** nécessaires
 
-## 🎨 Étape 2 : Installation de la carte personnalisée
+## 🔄 Redémarrage
 
-### 2.1 Ajouter le dépôt frontend
-1. Allez dans **HACS** > **Frontend**
-2. Cliquez sur les **3 points** (⋮) en haut à droite
-3. Sélectionnez **Télécharger** (Download)
-4. Dans la section **URL du dépôt**, entrez :
-   ```
-   https://github.com/delormejonathan/fridge_manager
-   ```
-5. Cliquez sur **Télécharger**
-
-### 2.2 Installation de la carte
-HACS va :
-- ✅ Télécharger `fridge-manager-card.js`
-- ✅ Installer dans `www/fridge-manager-card.js`
-- ✅ Rendre la carte disponible
-
-## 🔄 Étape 3 : Redémarrage
-
-### 3.1 Redémarrer Home Assistant
+### Redémarrer Home Assistant
 1. Allez dans **Paramètres** > **Système**
 2. Cliquez sur **Redémarrer**
 3. Attendez que le redémarrage soit terminé
 
-### 3.2 Vérifier l'installation
+### Vérifier l'installation
 1. Allez dans **Outils de développement** > **États**
 2. Cherchez `sensor.gestionnaire_de_frigo`
 3. Le sensor devrait apparaître avec des attributs
 
-## 📱 Étape 4 : Configuration du tableau de bord
+## 📱 Configuration du tableau de bord
 
-### 4.1 Ajouter la carte au tableau de bord
+### Ajouter la carte au tableau de bord
 1. Modifiez votre tableau de bord
 2. Ajoutez une nouvelle carte
 3. Choisissez **Carte manuelle**
@@ -70,7 +52,7 @@ HACS va :
 type: custom:fridge-manager-card
 ```
 
-### 4.2 Personnaliser (optionnel)
+### Personnaliser (optionnel)
 Vous pouvez ajouter des options :
 
 ```yaml
@@ -78,7 +60,7 @@ type: custom:fridge-manager-card
 title: "Mon Frigo"  # Personnaliser le titre
 ```
 
-## ✅ Étape 5 : Vérification finale
+## ✅ Vérification finale
 
 ### 5.1 Tester l'ajout d'articles
 1. Utilisez la carte pour ajouter un article

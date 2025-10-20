@@ -17,43 +17,40 @@
 
 ## 📦 Installation
 
-### Méthode 1 : Via HACS (Recommandé)
+### 🚀 Via HACS (Recommandé - 1 seule installation !)
 
-#### 1. Ajouter le dépôt HACS
 1. Allez dans **HACS** > **Integrations**
-2. Cliquez sur les **3 points** en haut à droite > **Télécharger**
+2. Cliquez sur les **3 points** (⋮) en haut à droite > **Télécharger**
 3. Ajoutez l'URL de ce dépôt : `https://github.com/delormejonathan/fridge_manager`
 4. Cliquez sur **Télécharger**
+5. **Redémarrez** Home Assistant
 
-#### 2. Installer la carte personnalisée
-1. Allez dans **HACS** > **Frontend**
-2. Cliquez sur les **3 points** > **Télécharger**
-3. Ajoutez l'URL de ce dépôt : `https://github.com/delormejonathan/fridge_manager`
-4. Cliquez sur **Télécharger**
+✅ **C'est tout !** L'intégration ET la carte personnalisée sont installées automatiquement !
 
-#### 3. Redémarrer
-Redémarrez Home Assistant après l'installation.
-
-### Méthode 2 : Manuellement
+### 📋 Manuellement
 
 #### 1. Cloner le dépôt
 ```bash
-cd your-config/configuration.yaml
+cd your-config/
 git clone https://github.com/delormejonathan/fridge_manager.git
 ```
 
 #### 2. Copier les fichiers
 ```bash
 cp -r fridge_manager/custom_components/fridge_manager config/custom_components/
-cp -r fridge_manager/fridge-manager-card config/www/
 ```
 
-#### 3. Ajouter la ressource
+#### 3. Ajouter la ressource frontend
 Dans `configuration.yaml` :
 ```yaml
 frontend:
   extra_module_url:
     - /local/fridge-manager-card.js
+```
+
+#### 4. Copier la carte
+```bash
+cp fridge_manager/custom_components/fridge_manager/www/fridge-manager-card.js config/www/
 ```
 
 ## ⚙️ Configuration

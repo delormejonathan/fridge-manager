@@ -4,5 +4,7 @@
   "domains": ["fridge_manager"],
   "homeassistant": "2024.1.0",
   "country": "FR",
-  "hacs": "0.33.0"
+  "hacs": "0.33.0",
+  "persistent_directory": "www",
+  "filename": "fridge-manager-card.js"
 }
