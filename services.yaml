@@ -1,0 +1,34 @@
+add_item:
+  name: Ajouter un article
+  description: Ajouter un article au frigo avec sa date d'expiration
+  fields:
+    name:
+      name: Nom
+      description: Nom de l'article
+      required: true
+      example: "Lait"
+      selector:
+        text:
+    expiration_date:
+      name: Date d'expiration
+      description: Date d'expiration de l'article
+      required: true
+      example: "2024-12-25"
+      selector:
+        date:
+
+remove_item:
+  name: Retirer un article
+  description: Retirer un article du frigo
+  fields:
+    name:
+      name: Nom
+      description: Nom de l'article à retirer
+      required: true
+      example: "Lait"
+      selector:
+        text:
+
+clear_all:
+  name: Vider la liste
+  description: Supprimer tous les articles du frigo

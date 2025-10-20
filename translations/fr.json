@@ -1,0 +1,33 @@
+{
+    "title": "Gestionnaire de Frigo",
+    "services": {
+        "add_item": {
+            "name": "Ajouter un article",
+            "description": "Ajouter un article au frigo avec sa date d'expiration",
+            "fields": {
+                "name": {
+                    "name": "Nom",
+                    "description": "Nom de l'article"
+                },
+                "expiration_date": {
+                    "name": "Date d'expiration",
+                    "description": "Date d'expiration de l'article"
+                }
+            }
+        },
+        "remove_item": {
+            "name": "Retirer un article",
+            "description": "Retirer un article du frigo",
+            "fields": {
+                "name": {
+                    "name": "Nom",
+                    "description": "Nom de l'article à retirer"
+                }
+            }
+        },
+        "clear_all": {
+            "name": "Vider la liste",
+            "description": "Supprimer tous les articles du frigo"
+        }
+    }
+}
